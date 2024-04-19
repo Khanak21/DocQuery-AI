@@ -6,15 +6,18 @@ from pandasai import SmartDatalake
 from pandasai.llm import GooglePalm
 
 import google.generativeai as genai
+from streamlit_local_storage import LocalStorage
+
 
 from PyPDF2 import PdfReader  
 load_dotenv()
+history=[]
 genai.configure(api_key=os.environ['API_KEY'])
+localS = LocalStorage()
 
 api = os.getenv('API_KEY')
 model = genai.GenerativeModel('gemini-pro')
 
-# Function for pandas ai to query a csv file
 def chat_with_pdf(text, prompt):
     pdf_text = ""
     for data in text: 
@@ -51,12 +54,13 @@ if all_csv:
     
    with col2:
     st.info("Chat with your CSV")
-    input_text = st.text_area("Enter your query")  # check why 1st word not coming
+    input_text = st.text_area("Enter your query",key="csv_query")  # check why 1st word not coming
     if input_text is not None:
         col1, col2 = st.columns([1,4])  # Create two columns
-        if col1.button("Ask Query"):
+        if col1.button("Ask Query", key="ask_query_csv"):
             st.info("Your query:" + " " + input_text)
             result = chat_with_csv(data, input_text)
+            history.append((input_text,result))
             st.success(result)
         if col2.button("Plot Graph"):
             st.info("Your query:" + " " + input_text)
@@ -72,6 +76,17 @@ def extract_text_from_pdf(pdf_file):
             st = page.extract_text()
             text += st
     return text
+
+def displayHistory():
+    if history:
+        st.info("Chat History")
+        for i, entry in enumerate(history):
+            if len(entry) == 2:  
+                st.write("Query {}: {}".format(i+1, entry[0]))
+                st.write("Response: ", entry[1])
+            else:
+                st.write("Invalid history entry at index", i)
+        st.write("")
 
 
 input_pdf = st.file_uploader("Upload your PDF file ", type=['pdf'], accept_multiple_files=True)
@@ -90,9 +105,14 @@ if input_pdf:
         st.text_area("PDF Text", text[selected_index], height=500)
     with col2:
         st.info("Chat with your PDF")
-        input_text = st.text_area("Enter your query")
+        input_text = st.text_area("Enter your query",key="pdf_query")
         if input_text is not None:
-            if st.button("Ask Query"):
+            if st.button("Ask Query", key="ask_query_pdf"):
                 st.info("Your query: {}".format(input_text))
                 result = chat_with_pdf(text, input_text)
+                history.append((input_text,result))
                 st.success(result)
+
+
+st.write("Chat History")
+displayHistory()                
