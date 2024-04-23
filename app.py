@@ -60,7 +60,7 @@ if all_csv:
         if col1.button("Ask Query", key="ask_query_csv"):
             st.info("Your query:" + " " + input_text)
             result = chat_with_csv(data, input_text)
-            history.append((input_text,result))
+            st.download_button(label="Download Result as Text", data="Query: {}\nResult: {}".format(input_text, result), file_name="pdf_result.txt", mime="text/plain")
             st.success(result)
         if col2.button("Plot Graph"):
             st.info("Your query:" + " " + input_text)
@@ -110,7 +110,8 @@ if input_pdf:
             if st.button("Ask Query", key="ask_query_pdf"):
                 st.info("Your query: {}".format(input_text))
                 result = chat_with_pdf(text, input_text)
-                history.append((input_text,result))
+                st.download_button(label="Download Result as Text", data="Query: {}\nResult: {}".format(input_text, result), file_name="pdf_result.txt", mime="text/plain")
+                
                 st.success(result)
 
 
