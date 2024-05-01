@@ -25,6 +25,7 @@
 repository: `git clone https://github.com/Khanak21/DocQuery-AI.git`
 2. Install dependencies: `cd DocQuery-AI`
 3. Install the libraries:
+4. 
    ```
    pip install streamlit
    pip install pandasai
@@ -32,15 +33,18 @@ repository: `git clone https://github.com/Khanak21/DocQuery-AI.git`
    pip install PyPDF2
    pip install dotenv
    ```
-4. Set up the virtual environment
+   
+5. Set up the virtual environment
+   
    ```
    python -m venv .venv
    cd .venv
    cd Scripts
    ./activate
    streamlit run app.py
-   ```  
-5. Run the application using command streamlit run app.py.
+   ```
+   
+6. Run the application using command streamlit run app.py.
 
 ## Collaborators:
 1. Kalp Mehta
